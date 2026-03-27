@@ -1,0 +1,425 @@
+**<!DOCTYPE html>**  
+**<html>**  
+**<head>**  
+**  <title>Netflix Clone</title>**  
+  
+**  <style>**  
+**    body {**  
+**      margin:0;**  
+**      font-family:Arial;**  
+**      background:black;**  
+**      color:white;**  
+**      text-align:center;**  
+**    }**  
+  
+**    .hidden { display:none; }**  
+  
+**    /* ===================== */**  
+**    /* NETFLIX INTRO (UNCHANGED) */**  
+**    /* ===================== */**  
+  
+**    #splash{**  
+**      position:fixed;**  
+**      inset:0;**  
+**      background:black;**  
+**      display:flex;**  
+**      justify-content:center;**  
+**      align-items:center;**  
+**      z-index:9999;**  
+**      animation:fadeOut 2.6s ease forwards;**  
+**      animation-delay:2.2s;**  
+**    }**  
+  
+**    .logo-wrap{ position:relative; }**  
+  
+**    .logo-glow{**  
+**      position:absolute;**  
+**      width:220px;**  
+**      height:80px;**  
+**      background:#e50914;**  
+**      filter:blur(60px);**  
+**      opacity:0.6;**  
+**      animation:glowPulse 1.5s ease forwards;**  
+**    }**  
+  
+**    .netflix-text{**  
+**      font-size:64px;**  
+**      font-weight:900;**  
+**      letter-spacing:10px;**  
+**      color:#e50914;**  
+**      text-transform:uppercase;**  
+**      z-index:2;**  
+  
+**      opacity:0;**  
+**      transform:scale(0.6);**  
+**      filter:blur(12px);**  
+  
+**      animation:intro 1.4s ease forwards;**  
+**    }**  
+  
+**    @keyframes intro{**  
+**      0%{opacity:0; transform:scale(0.6); filter:blur(12px);}**  
+**      50%{opacity:1; transform:scale(1.15); filter:blur(0);}**  
+**      100%{opacity:1; transform:scale(1);}**  
+**    }**  
+  
+**    @keyframes glowPulse{**  
+**      0%{opacity:0;}**  
+**      50%{opacity:0.9;}**  
+**      100%{opacity:0;}**  
+**    }**  
+  
+**    @keyframes fadeOut{**  
+**      to{ opacity:0; visibility:hidden; }**  
+**    }**  
+  
+**    /* ===================== */**  
+**    /* LOGIN (FIXED ONLY THIS) */**  
+**    /* ===================== */**  
+  
+**    #login {**  
+**      position:relative;**  
+**      min-height:100vh;**  
+**    }**  
+  
+**    .login-bg{**  
+**      position:absolute;**  
+**      inset:0;**  
+**      background:url("https://image.tmdb.org/t/p/original/8UlWHLMpgZm9bx6QYh0NFoq67TZ.jpg");**  
+**      background-size:cover;**  
+**      background-position:center;**  
+**      filter:brightness(0.35);**  
+**      z-index:-1;**  
+**    }**  
+  
+**    .login-box{**  
+**      width:320px;**  
+**      margin:100px auto;**  
+**      background:rgba(0,0,0,0.75);**  
+**      padding:30px;**  
+**      border-radius:8px;**  
+**      text-align:left;**  
+**    }**  
+  
+**    .logo {**  
+**      color:red;**  
+**      font-size:50px;**  
+**      margin-bottom:20px;**  
+**    }**  
+  
+**    .login-box input{**  
+**      width:100%;**  
+**      margin:10px 0;**  
+**      padding:12px;**  
+**      background:#333;**  
+**      border:none;**  
+**      border-radius:4px;**  
+**      color:white;**  
+**    }**  
+  
+**    .login-box input::placeholder{**  
+**      color:#aaa;**  
+**    }**  
+  
+**    .login-box button{**  
+**      width:100%;**  
+**      margin-top:15px;**  
+**      padding:12px;**  
+**      background:red;**  
+**      border:none;**  
+**      color:white;**  
+**      font-weight:bold;**  
+**      border-radius:4px;**  
+**      cursor:pointer;**  
+**    }**  
+  
+**    #error { color:red; margin-top:10px; }**  
+  
+**    .login-footer{**  
+**      display:flex;**  
+**      justify-content:space-between;**  
+**      font-size:13px;**  
+**      color:#aaa;**  
+**      margin-top:15px;**  
+**    }**  
+  
+**    /* LOADING (UNCHANGED) */**  
+**    .spinner {**  
+**      border:4px solid #222;**  
+**      border-top:4px solid red;**  
+**      border-radius:50%;**  
+**      width:50px;**  
+**      height:50px;**  
+**      animation:spin 1s linear infinite;**  
+**      margin-top:200px;**  
+**    }**  
+  
+**    @keyframes spin { 100%{transform:rotate(360deg);} }**  
+  
+**    /* ===================== */**  
+**    /* PROFILES (UNCHANGED) */**  
+**    /* ===================== */**  
+  
+**    #profiles { position:relative; min-height:100vh; }**  
+  
+**    .profile-bg {**  
+**      position:absolute;**  
+**      inset:0;**  
+**      background:url("https://image.tmdb.org/t/p/original/7WsyChQLEftFiDOVTGkv3hFpyyt.jpg");**  
+**      background-size:cover;**  
+**      filter:brightness(0.25);**  
+**      z-index:-1;**  
+**    }**  
+  
+**    .who-content { padding-top:120px; }**  
+  
+**    .profiles {**  
+**      display:flex;**  
+**      justify-content:center;**  
+**      gap:50px;**  
+**    }**  
+  
+**    .profile-card {**  
+**      cursor:pointer;**  
+**      position:relative;**  
+**      transition:0.3s;**  
+**    }**  
+  
+**    .profile-card:hover { transform:scale(1.1); }**  
+  
+**    .avatar-box {**  
+**      width:95px;**  
+**      height:95px;**  
+**      background:#111;**  
+**      border-radius:10px;**  
+**      border:2px solid #333;**  
+**      display:flex;**  
+**      align-items:center;**  
+**      justify-content:center;**  
+**    }**  
+  
+**    .avatar-box::after {**  
+**      content:"N";**  
+**      color:#e50914;**  
+**      font-size:40px;**  
+**      font-weight:bold;**  
+**    }**  
+  
+**    .avatar-box.kids::after { color:#3b82f6; }**  
+  
+**    .profile-card:hover .avatar-box {**  
+**      box-shadow:0 0 20px rgba(255,0,0,0.4);**  
+**    }**  
+  
+**    .profile-card.kids:hover .avatar-box {**  
+**      box-shadow:0 0 20px rgba(59,130,246,0.5);**  
+**    }**  
+  
+**    .name { margin-top:10px; color:#aaa; }**  
+  
+**    .edit {**  
+**      position:absolute;**  
+**      top:5px;**  
+**      right:5px;**  
+**      opacity:0;**  
+**    }**  
+  
+**    .profile-card:hover .edit { opacity:1; }**  
+  
+**    /* HOME (UNCHANGED) */**  
+**    .topbar {**  
+**      display:flex;**  
+**      justify-content:space-between;**  
+**      padding:15px;**  
+**      background:#111;**  
+**    }**  
+  
+**    .nav a { margin:0 10px; cursor:pointer; }**  
+**    .nav a:hover { color:red; }**  
+  
+**    .section-title {**  
+**      text-align:left;**  
+**      margin:20px;**  
+**      color:#aaa;**  
+**    }**  
+  
+**    .row {**  
+**      display:flex;**  
+**      overflow-x:auto;**  
+**      gap:10px;**  
+**      padding:10px;**  
+**    }**  
+  
+**    .card {**  
+**      min-width:140px;**  
+**      height:200px;**  
+**      border-radius:10px;**  
+**      overflow:hidden;**  
+**    }**  
+  
+**    .card img {**  
+**      width:100%;**  
+**      height:100%;**  
+**      object-fit:cover;**  
+**    }**  
+  
+**    .settings { padding:20px; text-align:left; }**  
+  
+**  </style>**  
+**</head>**  
+  
+**<body>**  
+  
+**<!-- INTRO -->**  
+**<div id="splash">**  
+**  <div class="logo-wrap">**  
+**    <div class="logo-glow"></div>**  
+**    <div class="netflix-text">NETFLIX</div>**  
+**  </div>**  
+**</div>**  
+  
+**<!-- LOGIN (ONLY THIS CHANGED) -->**  
+**<div id="login" class="hidden">**  
+**  <div class="login-bg"></div>**  
+  
+**  <div class="login-box">**  
+**    <h1 class="logo">NETFLIX</h1>**  
+  
+**    <input id="email" placeholder="Email or phone number">**  
+**    <input id="password" type="password" placeholder="Password">**  
+  
+**    <button onclick="login()">Sign In</button>**  
+  
+**    <p id="error"></p>**  
+  
+**    <div class="login-footer">**  
+**      <label><input type="checkbox"> Remember me</label>**  
+**      <span>Need help?</span>**  
+**    </div>**  
+**  </div>**  
+**</div>**  
+  
+**<!-- LOADING -->**  
+**<div id="loading" class="hidden">**  
+**  <div class="spinner"></div>**  
+**</div>**  
+  
+**<!-- PROFILES -->**  
+**<div id="profiles" class="hidden">**  
+**  <div class="profile-bg"></div>**  
+  
+**  <div class="who-content">**  
+**    <h2>Who's watching?</h2>**  
+  
+**    <div class="profiles">**  
+**      <div class="profile-card" onclick="selectProfile()">**  
+**        <div class="avatar-box"></div>**  
+**        <div class="name">Adult</div>**  
+**        <div class="edit" onclick="event.stopPropagation(); openEdit(this.parentElement)">**✏️**</div>**  
+**      </div>**  
+  
+**      <div class="profile-card kids" onclick="selectProfile()">**  
+**        <div class="avatar-box kids"></div>**  
+**        <div class="name">Kids</div>**  
+**        <div class="edit" onclick="event.stopPropagation(); openEdit(this.parentElement)">**✏️**</div>**  
+**      </div>**  
+**    </div>**  
+**  </div>**  
+**</div>**  
+  
+**<!-- HOME -->**  
+**<div id="home" class="hidden">**  
+**  <div class="topbar">**  
+**    <div>NETFLIX</div>**  
+  
+**    <div class="nav">**  
+**      <a onclick="showHome()">Home</a>**  
+**      <a onclick="showAdult()">Adult</a>**  
+**      <a onclick="showKids()">Kids</a>**  
+**      <a onclick="showSettings()">Settings</a>**  
+**      <a onclick="logout()">Logout</a>**  
+**    </div>**  
+**  </div>**  
+  
+**  <div id="content"></div>**  
+**</div>**  
+  
+**<script>**  
+  
+**/* INTRO */**  
+**setTimeout(()=>{**  
+**  document.getElementById("splash").style.display="none";**  
+**  document.getElementById("login").classList.remove("hidden");**  
+**},2000);**  
+  
+**/* LOGIN */**  
+**function login(){**  
+**  let email=document.getElementById("email").value;**  
+**  let pass=document.getElementById("password").value;**  
+  
+**  if(!email.includes("@") || pass.length<4){**  
+**    document.getElementById("error").innerText="Invalid login";**  
+**    return;**  
+**  }**  
+  
+**  document.getElementById("login").classList.add("hidden");**  
+**  document.getElementById("loading").classList.remove("hidden");**  
+  
+**  setTimeout(()=>{**  
+**    document.getElementById("loading").classList.add("hidden");**  
+**    document.getElementById("profiles").classList.remove("hidden");**  
+**  },1200);**  
+**}**  
+  
+**/* EDIT */**  
+**function openEdit(profile){**  
+**  let newName = prompt("Profile name:", profile.querySelector(".name").innerText);**  
+**  if(newName) profile.querySelector(".name").innerText = newName;**  
+**}**  
+  
+**/* PROFILE CLICK */**  
+**function selectProfile(){**  
+**  document.getElementById("profiles").classList.add("hidden");**  
+**  document.getElementById("home").classList.remove("hidden");**  
+**  showHome();**  
+**}**  
+  
+**/* MOVIES */**  
+**let adultMovies=[{t:"Red Notice",g:"Action",i:"https://image.tmdb.org/t/p/w500/6JjfSchsU6daXk2AKX8EEBjO3Fm.jpg"}];**  
+**let kidsMovies=[{t:"Frozen",g:"Animation",i:"https://image.tmdb.org/t/p/w500/mINJaa34MtRjzv8Z6Z5F.jpg"}];**  
+  
+**function render(list){**  
+**  let grouped={},html="";**  
+**  list.forEach(m=>{**  
+**    if(!grouped[m.g]) grouped[m.g]=[];**  
+**    grouped[m.g].push(m);**  
+**  });**  
+  
+**  for(let g in grouped){**  
+**    html+=`<div class="section-title">${g}</div><div class="row">`;**  
+**    grouped[g].forEach(m=>{**  
+**      html+=`<div class="card"><img src="${m.i}"></div>`;**  
+**    });**  
+**    html+=`</div>`;**  
+**  }**  
+  
+**  document.getElementById("content").innerHTML=html;**  
+**}**  
+  
+**function showHome(){ render([...adultMovies,...kidsMovies]); }**  
+**function showAdult(){ render(adultMovies); }**  
+**function showKids(){ render(kidsMovies); }**  
+  
+**function showSettings(){**  
+**  document.getElementById("content").innerHTML="<div class='settings'><h2>Settings</h2></div>";**  
+**}**  
+  
+**function logout(){ location.reload(); }**  
+  
+**</script>**  
+  
+**</body>**  
+**</**  
+  
+  
+**Just this **  
